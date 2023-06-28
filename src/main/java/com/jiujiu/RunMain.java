@@ -43,6 +43,9 @@ public class RunMain {
 
     public RunMain() {
 
+        vsText.setText(PropertiesUtil.getValue("vs"));
+
+
         new DropTarget(textField1, DnDConstants.ACTION_COPY_OR_MOVE,
                 new DropTargetAdapter() {
                     @Override
