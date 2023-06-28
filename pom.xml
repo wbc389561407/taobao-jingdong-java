@@ -1,0 +1,169 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.wangbingchen</groupId>
+  <artifactId>file-read</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>file-read</name>
+
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+      <version>5.8.16</version>
+    </dependency>
+
+
+    <!--poi-ooxml-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+
+    <!--Jsoup-->
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.14.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.intellij</groupId>
+      <artifactId>forms_rt</artifactId>
+      <version>7.0.3</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <plugins>
+<!--      &lt;!&ndash;读取配置文件内容 release.properties &ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>org.codehaus.mojo</groupId>-->
+<!--        <artifactId>properties-maven-plugin</artifactId>-->
+<!--        <version>1.0-alpha-2</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>initialize</phase>-->
+<!--            <goals>-->
+<!--              <goal>read-project-properties</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <files>-->
+<!--                <file>${user.dir}/src/main/resources/release.properties</file>-->
+<!--              </files>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+
+      <!-- 打包-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.jiujiu.RunMain</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+<!--      &lt;!&ndash;复制文件 整理目录结构&ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-resources-plugin</artifactId>-->
+<!--        <version>2.6</version>-->
+<!--        <executions>-->
+<!--          &lt;!&ndash;复制文件夹&ndash;&gt;-->
+<!--          <execution>-->
+<!--            <id>copy-base</id>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>copy-resources</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <encoding>UTF-8</encoding>-->
+<!--              <outputDirectory>${basedir}/target/e-file-tool-${vs}</outputDirectory>-->
+<!--              <resources>-->
+<!--                <resource>-->
+<!--                  <directory>e-file-tool-base</directory>-->
+<!--                  <filtering>false</filtering>-->
+<!--                </resource>-->
+<!--              </resources>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+
+<!--          &lt;!&ndash;复制文件夹&ndash;&gt;-->
+<!--          <execution>-->
+<!--            <id>copy-icon</id>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>copy-resources</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <encoding>UTF-8</encoding>-->
+<!--              <outputDirectory>${basedir}/target/e-file-tool-${vs}/icon</outputDirectory>-->
+<!--              <resources>-->
+<!--                <resource>-->
+<!--                  <directory>icon</directory>-->
+<!--                  <filtering>false</filtering>-->
+<!--                </resource>-->
+<!--              </resources>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+
+<!--          &lt;!&ndash;复制文件&ndash;&gt;-->
+<!--          <execution>-->
+<!--            <id>copy-jar</id>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>copy-resources</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <encoding>UTF-8</encoding>-->
+<!--              <outputDirectory>${basedir}/target/e-file-tool-${vs}/bin</outputDirectory>-->
+<!--              <resources>-->
+<!--                <resource>-->
+<!--                  <directory>target</directory>-->
+<!--                  <includes>-->
+<!--                    <include>*jar-with-dependencies.jar</include>-->
+<!--                  </includes>-->
+<!--                </resource>-->
+<!--              </resources>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+
+    </plugins>
+  </build>
+
+</project>
