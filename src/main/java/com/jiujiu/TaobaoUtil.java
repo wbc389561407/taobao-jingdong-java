@@ -14,12 +14,45 @@ public class TaobaoUtil {
 
     public static String cookie;
 
+
+    /**
+     * 传入 一个 关键词 和 一个 excelUtil 查询 关键词的数据 写入excel
+     * @param key  电视机
+     */
+    public static List<List<String>> getTbData(String key) {
+        String searchKey = key.replace("单品", "");
+        //传入关键词 返回查询到数据 如果长度为 0  则 减少 关键词 重新查询
+        JSONArray jsonArray = getTaobaoData(searchKey);
+        if(jsonArray.size()==0){
+            // 去掉 空白后面的一段
+            searchKey = searchKey.substring(0,searchKey.lastIndexOf(" "));
+            jsonArray = getTaobaoData(searchKey);
+        }
+
+        List<List<String>> reList = new ArrayList<>();
+        for (int i2 = 0; i2 < jsonArray.size(); i2++) {
+            JSONObject jsonObject1 = jsonArray.getJSONObject(i2);
+            List list = new ArrayList<>();
+            list.add(key);
+            list.add(searchKey);
+            list.add(jsonObject1.get("raw_title").toString());
+            list.add(jsonObject1.get("shopName").toString());
+            list.add(jsonObject1.get("view_price").toString());
+            list.add(jsonObject1.get("view_sales").toString().replace("人付款","").replace("+",""));
+            list.add(jsonObject1.get("pic_url").toString());
+            list.add(jsonObject1.get("detail_url").toString());
+            reList.add(list);
+        }
+        return reList;
+    }
+
+
     /**
      * 传入 一个 关键词 和 一个 excelUtil 查询 关键词的数据 写入excel
      * @param key  电视机
      * @param excelUtil1
      */
-    public static void getTbData(String key, ExcelUtil excelUtil1) {
+    public static int getTbData(String key, ExcelUtil excelUtil1) {
         String searchKey = key.replace("单品", "");
         //传入关键词 返回查询到数据 如果长度为 0  则 减少 关键词 重新查询
         JSONArray jsonArray = getTaobaoData(searchKey);
@@ -48,6 +81,7 @@ public class TaobaoUtil {
 //            System.out.println(jsonObject1.get("pic_url"));
 //            System.out.println(jsonObject1.get("detail_url"));
         }
+        return jsonArray.size();
     }
 
     private static JSONArray getTaobaoData(String searchKey) {

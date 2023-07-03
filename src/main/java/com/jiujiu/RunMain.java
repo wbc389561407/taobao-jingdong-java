@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * @author 389561407@qq.com
@@ -86,11 +87,13 @@ public class RunMain {
             public void actionPerformed(ActionEvent e) {
                 new Thread(() -> {
                     runStateText.setText("正在运行");
+                    //源文件路径
                     String path = textField1.getText();
                     System.out.println(path);
                     System.out.println("淘宝");
                     int i = path.lastIndexOf('\\');
                     String substring = path.substring(0, i);
+                    //生成文件路径
                     String filePath = substring + "/淘宝" + System.currentTimeMillis() + ".xls";
                     ExcelUtil excelUtil1 = new ExcelUtil(filePath);
                     String[] title = {"关键词", "搜索关键词", "商品名称", "店铺名称", "商品价格", "商品销量", "商品图片", "店铺链接"};
@@ -101,41 +104,99 @@ public class RunMain {
                         excelUtil1.setOneRowData(titleList, 0);
                     }
                     excelUtil1.writeAndClose();
-                    //读取文件内容 返回一个字符串数组
+                    //读取文件 获取对象
                     ExcelUtil excelUtil = new ExcelUtil(path);
                     //第二行开始读取
                     List<String> oneColumnData = excelUtil.getOneColumnData(1);
-                    oneColumnData.remove(0);
+                    //第三行行开始读取
+                    List<String> oneColumnData1 = excelUtil.getOneColumnData(2);
+                    System.out.println("原先完成:" + oneColumnData1.size());
+                    excelUtil.writeAndClose();
 
+                    int index = oneColumnData1.size() + 1;
                     //遍历字符串数组, 查询淘宝第一页 返回数据 写入 Excel
-                    for (String s : oneColumnData) {
-                        ExcelUtil excelUtil2 = new ExcelUtil(filePath);
-
+                    for (int j = index; j < oneColumnData.size(); j++) {
+                        String s = oneColumnData.get(j);
                         System.out.println("开始查询关键词:" + s);
                         stautsShow.setText("正在查询关键词:" + s);
                         //查询后写入 Excel
                         try {
-                            TaobaoUtil.getTbData(s, excelUtil2);
+                            List<List<String>> tbData = TaobaoUtil.getTbData(s);
+                            for (List<String> tbDatum : tbData) {
+                                ExcelUtil newFile = new ExcelUtil(filePath);
+                                newFile.setOneRowData(tbDatum);
+                                newFile.writeAndClose();
+                            }
+                            ExcelUtil oldFile = new ExcelUtil(path);
+                            oldFile.setIntVal(tbData.size(), j, 2);
+                            oldFile.writeAndClose();
+
                         } catch (Exception e1) {
                             System.out.println("输入 cookie 有误 请重新输入");
                             //java 弹窗输入
                             TaobaoUtil.cookie = JOptionPane.showInputDialog("输入 cookie");
-                            TaobaoUtil.getTbData(s, excelUtil1);
+
+                            List<List<String>> tbData = TaobaoUtil.getTbData(s);
+                            for (List<String> tbDatum : tbData) {
+                                ExcelUtil newFile = new ExcelUtil(filePath);
+                                newFile.setOneRowData(tbDatum);
+                                newFile.writeAndClose();
+                            }
+                            ExcelUtil oldFile = new ExcelUtil(path);
+                            oldFile.setIntVal(tbData.size(), j, 2);
+                            oldFile.writeAndClose();
                         }
-                        excelUtil2.writeAndClose();
                         //写入 Excel
                         System.out.println("暂停 观察数据 测试");
                         try {
-                            Thread.sleep(1000 * 10);
+                            Random random = new Random();
+                            int m = random.nextInt(20) + 5;
+                            System.out.println("暂停:" + m + "秒");
+                            Thread.sleep(1000 * m);
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
+
                     }
+
+//                    for (String s : oneColumnData) {
+//                        //读取文件内容 返回一个字符串数组
+//                        excelUtil = new ExcelUtil(path);
+//                        ExcelUtil excelUtil2 = new ExcelUtil(filePath);
+//
+//                        System.out.println("开始查询关键词:" + s);
+//                        stautsShow.setText("正在查询关键词:" + s);
+//                        //查询后写入 Excel
+//                        try {
+//                            int tbData = TaobaoUtil.getTbData(s, excelUtil2);
+//                            excelUtil.setIntVal(tbData, 2, index);
+//                        } catch (Exception e1) {
+//                            System.out.println("输入 cookie 有误 请重新输入");
+//                            //java 弹窗输入
+//                            TaobaoUtil.cookie = JOptionPane.showInputDialog("输入 cookie");
+//                            int tbData = TaobaoUtil.getTbData(s, excelUtil1);
+//                            excelUtil.setIntVal(tbData, 2, index);
+//                        }
+//                        excelUtil2.writeAndClose();
+//                        //写入 Excel
+//                        System.out.println("暂停 观察数据 测试");
+//                        excelUtil.writeAndClose();
+//                        try {
+//                            Thread.sleep(1000 * 10);
+//                        } catch (InterruptedException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+//                    }
                     runStateText.setText("未运行");
                     stautsShow.setText("搜索完成");
                 }).start();
 
             }
+
+            private void selectDataByKeyword(String s) {
+
+            }
+
         });
         jdButton.addActionListener(new ActionListener() {
             @Override

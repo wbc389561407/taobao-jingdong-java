@@ -46,8 +46,6 @@ public class ExcelUtil {
             System.out.println(oneColumnDatum);
         }
         excelUtil.writeAndClose();
-
-
     }
 
     private static void copyFile(String filePath, String bakPath) {
