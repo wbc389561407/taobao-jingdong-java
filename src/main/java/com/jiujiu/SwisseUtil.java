@@ -14,34 +14,32 @@ import java.util.List;
 
 public class SwisseUtil {
 
+    // 无需登录，直接获取数据
+    private static String url ="https://www.hnpwholesale.com.au/Mall/Swisse.aspx";
 
     public static void main(String[] args) {
 
-        System.out.println("Hello World!");
-        // https://search.jd.com/Search?keyword=%E4%BF%9D%E9%99%A9%E7%AE%B1%20%E5%AE%B6%E7%94%A8&enc=utf-8&pvid=75170e601f224d5a9942e1abbc73d01c
+        System.out.println("start >>>>>");
         ExcelUtil excelUtil = new ExcelUtil("d:/swisse"+System.currentTimeMillis()+".xlsx");
-
         String[] title = {"详情页地址","图片地址", "商品名称", "美元", "发货", "保质期", "重量", "服务", "详情图地址"};
         // 把 title 转换为 list
         List<String> titleList = Arrays.asList(title);
-        excelUtil.setOneRowData(titleList,0);
-
-        List<List<String>> data = getData("https://www.hnpwholesale.com.au/Mall/Swisse.aspx");
+        excelUtil.setOneRowData(titleList,0); //写入标题行
+        List<List<String>> data = getData(url); // 获取首页信息
 
 //        List<String> strings = data.get(1);
 //        List<String> data1 = getDetailData(strings.get(0));
 //        excelUtil.setOneRowData(data1);
 
         for (int i = 1; i < data.size(); i++) {
-            List<String> strings = data.get(i);
-            List<String> data1 = getDetailData(strings.get(0));
-            excelUtil.setOneRowData(data1);
+            List<String> strings = data.get(i); //拿到一个主页 信息
+            List<String> data1 = getDetailData(strings.get(0)); // 获取第一个字段 详情页 访问页面 获取详情页信息
+            excelUtil.setOneRowData(data1); //写入详情页信息
         }
 
-
+        // 写出数据 关闭流
         excelUtil.writeAndClose();
-
-
+    System.out.println("end >>>>>");
     }
 
     private static List<String> getDetailData(String url) {
@@ -133,18 +131,6 @@ public class SwisseUtil {
             }
 
         }
-//        elementsByTag.forEach(element -> {
-//            String attr1 = element.getElementsByTag("img").first().attr("src");
-//            System.out.println(attr1);
-//        });
-//        elementsByClass1.forEach(element -> {
-//            String text = element.text();
-//        });
-//        Element abcont = doc.getElementsByClass("abcont").first();
-//        String text = abcont.getElementsByTag("div").get(1).getElementsByTag("tr").get(2).text();
-//        abcont.getElementsByTag("div").get(1).getElementsByTag("tr").forEach(element -> {
-//            String text1 = element.getElementsByTag("td").get(1).text();
-//        });
 
         return list;
     }
